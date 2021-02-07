@@ -10,18 +10,25 @@ app.set("view options", {layout: "layout"});
 app.get("/", (request, response) => {
     const url = "https://www.cbr-xml-daily.ru/daily_json.js";
 
-    requestAPI(url, (error, request2, data) => {
+    requestAPI(url, (error, request2, data) => {        
         let model = {
             Valute: {}
         };
-    
+
+        let bufRus = {
+            Valute: {}
+        };
+
+        let bufModel = {
+            Valute: {}
+        };
 
         if (error) console.log(error);
         else {
             model = JSON.parse(data);
 
-            model.Valute["RUS"] = {
-                ID: "R0",
+            bufRus.Valute["RUS"] = {
+                ID: "0",
                 NumCode: "0",
                 CharCode: "RUS",
                 Nominal: 1,
@@ -30,14 +37,34 @@ app.get("/", (request, response) => {
                 Previous: 1
             };
 
-            for (const key in model.Valute) {
-                const element = model.Valute[key];
-                element.Value = element.Value / element.Nominal;
-                element.DeValue = 1 / element.Value;
-            }
-        }
+            /*model.Valute["RUS"] = {
+                ID: "R0",
+                NumCode: "0",
+                CharCode: "RUS",
+                Nominal: 1,
+                Name: "Российский рубль",
+                Value: 1,
+                Previous: 1
+            };*/
 
-        response.render("main", model);
+            bufModel.Valute = Object.assign(bufRus.Valute, model.Valute);
+
+            var index = 1;
+
+            for (const key in bufModel.Valute) {
+                
+                const element = bufModel.Valute[key];
+                //
+                element.ID = index;
+                index += 1;
+                //
+                element.Value = Math.round((element.Value / element.Nominal) * 1000) / 1000;
+                element.DeValue = Math.round((1 / element.Value) * 1000) / 1000;
+            }
+
+
+        }     
+        response.render("main", bufModel);
     });
 }); //обработчик маршрутов
 

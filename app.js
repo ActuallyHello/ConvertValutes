@@ -15,11 +15,11 @@ app.get("/", (request, response) => {
             Valute: {}
         };
 
-        let bufRus = {
+        let bufRus = { // буффер для РУС валюты
             Valute: {}
         };
 
-        let bufModel = {
+        let bufModel = { // буффер для добавления рус + модельки в конце
             Valute: {}
         };
 
@@ -62,9 +62,8 @@ app.get("/", (request, response) => {
                 element.DeValue = Math.round((1 / element.Value) * 1000) / 1000;
             }
 
-
         }     
-        response.render("main", bufModel);
+        response.render("main", bufModel); 
     });
 }); //обработчик маршрутов
 

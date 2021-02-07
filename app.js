@@ -5,6 +5,7 @@ const app = express(); //вызов приложения
 const port = 3000;
 
 app.set("view engine", "hbs");
+app.set("view options", {layout: "layout"});
 
 app.get("/", (request, response) => {
     const url = "https://www.cbr-xml-daily.ru/daily_json.js";
@@ -35,7 +36,7 @@ app.get("/", (request, response) => {
                 element.DeValue = 1 / element.Value;
             }
         }
-        
+
         response.render("main", model);
     });
 }); //обработчик маршрутов
